@@ -1,2 +1,3 @@
 # ssm
 ssm框架使用maven管理的简单搭建，方便刚学习ssm框架朋友们
+里面包含了ssm框架的详细搭建，还包含了对Controller的测试
