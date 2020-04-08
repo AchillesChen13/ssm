@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 写Sql语句  
+注意： namespace如果采用原始dao开发，自己取个名字 ;
+            我才用的是Mapper映射接口方式
+-->
+<mapper namespace="com.ssm.dao.IUserdao">
+    <!-- 
+                    一般来讲，数据库表的列名跟实体类的属性名不一致需要配置resultMap,我这里一致，推荐配置一下
+    -->
+    <resultMap type="com.ssm.entity.User" id="user">
+        <!--  这里的列名对应你写的SQL语句的列名
+                                    主键用id标签
+                                    其他属性用result标签 
+              javaType最好写一下 jdbcType类型mybatis可以自动转换
+         -->
+        <id column="id" property="id" javaType="java.lang.Integer"/>
+        <result column="username" property="username" />
+        
+        <!-- association是假设当前实体类包含其他类的时候的配置不包括集合
+                                集合的时候用 collection
+                                对用的类型配置resultMap和JavaType都可以-->
+        <!-- 
+        <association property="order" resultMap=""></association>
+        <collection property="orderList" javaType=""></collection> -->
+    </resultMap>
+    
+    <!-- 插入一个用户，selectKey的作用是添加用户后返回主键，这里我设置的是自增-->
+    <insert id="insertUser" parameterType="com.ssm.entity.User">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            select LAST_INSERT_ID() 
+        </selectKey>
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    
+    <!-- 通过id查询用户通过 -->
+    <select id="selectUserById" parameterType="java.lang.Integer" resultType="com.ssm.entity.User">
+        select * from user where id = #{id}
+    </select>
+    
+    <!-- 根据id删除用户  不用写Java.lang包,，mybatis自动转换，User同样可以-->
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from user where id = #{id}
+    </delete>
+    
+    <!-- 根据id修改name -->
+    <update id="updateUserNameById" parameterType="com.ssm.entity.User">
+        update user
+        set username = #{username}
+        where id = #{id}
+    </update>
+</mapper>
